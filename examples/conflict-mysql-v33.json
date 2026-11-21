@@ -1,0 +1,49 @@
+{
+  "schema_version": "3.3",
+  "engine": "mysql",
+  "connection_env": "BACKEND_GUARD_MYSQL_URL",
+  "test_database_acknowledged": true,
+  "allow_mutation_on_test_database": true,
+  "cases": [
+    {
+      "id": "single-row-lock-conflict",
+      "kind": "lock_conflict",
+      "control_ids": [
+        "BE-04-01"
+      ],
+      "isolation": "read_committed",
+      "lock_timeout_ms": 1500,
+      "probe_ms": 100,
+      "max_retries": 0,
+      "retryable_errors": [
+        "1205",
+        "1213"
+      ],
+      "release": "commit",
+      "setup": [
+        {
+          "sql": "DELETE FROM bga_v33 WHERE id=1"
+        },
+        {
+          "sql": "INSERT INTO bga_v33 (id,value) VALUES (1,10)"
+        }
+      ],
+      "cleanup": [
+        {
+          "sql": "DELETE FROM bga_v33 WHERE id=1"
+        }
+      ],
+      "hold": {
+        "sql": "UPDATE bga_v33 SET value=20 WHERE id=1"
+      },
+      "contender": {
+        "sql": "UPDATE bga_v33 SET value=30 WHERE id=1"
+      },
+      "verify": {
+        "sql": "SELECT value FROM bga_v33 WHERE id=1",
+        "expected_rows": 1,
+        "expected_value": 30
+      }
+    }
+  ]
+}

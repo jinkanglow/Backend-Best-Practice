@@ -1,0 +1,7 @@
+{
+  "block_severities": [
+    "critical",
+    "high"
+  ],
+  "require_evidence": true
+}

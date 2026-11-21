@@ -1,0 +1,18 @@
+{
+  "schema_version": "2.0",
+  "tests": [
+    {
+      "id": "migration-structure",
+      "kind": "postgres_migration",
+      "control_ids": ["BE-04-01"],
+      "connection_env": "BACKEND_TEST_DATABASE_URL",
+      "allow_mutation_on_test_database": true,
+      "files": ["migrations/001_create_items.sql"],
+      "assertions": {
+        "queries": [
+          {"sql": "SELECT COUNT(*)::int AS n FROM information_schema.tables WHERE table_name='items'", "column": "n", "equals": 1}
+        ]
+      }
+    }
+  ]
+}

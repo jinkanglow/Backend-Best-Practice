@@ -1,0 +1,5 @@
+{
+  "forbidden_dependencies": [
+    {"id":"domain-no-infra","from":"src/domain/**","import":"../infra/**"}
+  ]
+}

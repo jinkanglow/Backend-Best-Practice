@@ -1,0 +1,8 @@
+{
+  "schema_version":"2.4",
+  "cases":[
+    {"id":"new-cycle","expected":"fail","baseline":{"dependency_graph":{"edges":[{"from":"a","to":"b"}],"unresolved":[]}},"current":{"dependency_graph":{"edges":[{"from":"a","to":"b"},{"from":"b","to":"a"}],"unresolved":[]}}},
+    {"id":"stable-cycle","expected":"pass","baseline":{"dependency_graph":{"edges":[{"from":"a","to":"b"},{"from":"b","to":"a"}],"unresolved":[]}},"current":{"dependency_graph":{"edges":[{"from":"a","to":"b"},{"from":"b","to":"a"}],"unresolved":[]}}},
+    {"id":"unresolved-edge","expected":"insufficient_evidence","baseline":{"dependency_graph":{"edges":[],"unresolved":[]}},"current":{"dependency_graph":{"edges":[],"unresolved":[{"from":"a","specifier":"./missing"}]}}}
+  ]
+}

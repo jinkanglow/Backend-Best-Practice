@@ -1,0 +1,32 @@
+{
+  "name": "backend-engineering-assurance",
+  "version": "4.0.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "backend-guard": "./bin/backend-guard.mjs"
+  },
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "test:integration": "bash ci/integration.sh",
+    "test:real-db": "bash ci/real-db-v32.sh",
+    "test:real-db:v33": "bash ci/real-db-v33.sh",
+    "test:real-db:v34": "bash ci/real-db-v34.sh",
+    "test:real-db:v35": "bash ci/real-db-v35.sh",
+    "test:real-db:v36": "bash ci/real-db-v36.sh",
+    "test:real-db:v37": "bash ci/real-db-v37.sh",
+    "test:real-db:v38": "bash ci/real-db-v38.sh",
+    "test:real-db:v39": "bash ci/real-db-v39.sh",
+    "test:real-db:v40": "bash ci/real-db-v40.sh"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "typescript": "^5.0.0"
+  },
+  "optionalDependencies": {
+    "pg": "^8.13.0",
+    "mysql2": "^3.12.0"
+  }
+}

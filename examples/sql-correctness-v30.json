@@ -1,0 +1,22 @@
+{
+  "schema_version": "3.0",
+  "engine": "postgres",
+  "connection_env": "BGA_SQL_TEST_URL",
+  "test_database_acknowledged": true,
+  "cases": [
+    {
+      "id": "null-preservation",
+      "kind": "null_semantics",
+      "control_ids": ["BE-13-02"],
+      "sql": "SELECT NULL AS nullable_value",
+      "expected": {"rows": [{"nullable_value": null}]}
+    },
+    {
+      "id": "join-cardinality",
+      "kind": "join_cardinality",
+      "control_ids": ["BE-13-02"],
+      "sql": "SELECT a.id FROM (VALUES (1),(2)) AS a(id) LEFT JOIN (VALUES (1)) AS b(id) ON a.id=b.id ORDER BY a.id",
+      "expected": {"row_count": 2, "distinct_column": "id", "distinct_count": 2}
+    }
+  ]
+}

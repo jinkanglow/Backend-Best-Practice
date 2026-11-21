@@ -1,0 +1,73 @@
+{
+  "schema_version": "2.7",
+  "detectors": [
+    {
+      "id": "domain-direct-import-boundary-v1",
+      "control_ids": [
+        "BE-01-02"
+      ],
+      "status": "implemented",
+      "entrypoint": "lib/control-detectors.mjs#detectDomainBoundary",
+      "scope": "Direct import/reexport/require/import() edges from explicitly configured domain roots; external package prefixes and resolved internal forbidden paths",
+      "limitations": [
+        "Requires explicit project contract",
+        "Does not prove transitive or runtime dependency safety",
+        "Unresolved graph edges may make clean result inconclusive"
+      ],
+      "tests": [
+        "tests/v25.test.mjs"
+      ]
+    },
+    {
+      "id": "migration-destructive-review-v1",
+      "control_ids": [
+        "BE-05-04"
+      ],
+      "status": "implemented",
+      "entrypoint": "lib/control-detectors.mjs#detectMigrationReview",
+      "scope": "Candidate destructive SQL migration pattern detection; flags need for external approval and rollback evidence",
+      "limitations": [
+        "Heuristic patterns only",
+        "Cannot validate approvals or rollback correctness",
+        "Clean scan does not prove migration safety"
+      ],
+      "tests": [
+        "tests/v26.test.mjs"
+      ]
+    },
+    {
+      "id": "api-direct-body-sink-v1",
+      "control_ids": [
+        "BE-02-01"
+      ],
+      "status": "implemented_candidate_only",
+      "entrypoint": "lib/control-detectors.mjs",
+      "scope": "Candidate direct request body use at configured side-effect methods",
+      "limitations": [
+        "Not proof of a security vulnerability",
+        "Clean scan cannot prove compliance",
+        "Requires explicit contract"
+      ],
+      "tests": [
+        "tests/v27.test.mjs"
+      ]
+    },
+    {
+      "id": "sql-dynamic-argument-v1",
+      "control_ids": [
+        "BE-09-02"
+      ],
+      "status": "implemented_candidate_only",
+      "entrypoint": "lib/control-detectors.mjs",
+      "scope": "Candidate interpolated or concatenated first argument to configured query methods",
+      "limitations": [
+        "Not proof of a security vulnerability",
+        "Clean scan cannot prove compliance",
+        "Requires explicit contract"
+      ],
+      "tests": [
+        "tests/v27.test.mjs"
+      ]
+    }
+  ]
+}

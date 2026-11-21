@@ -1,0 +1,484 @@
+{
+  "schema_version": "3.6",
+  "engine": "mysql",
+  "connection_env": "BACKEND_GUARD_MYSQL_URL",
+  "disposable_database_acknowledged": true,
+  "allow_mutations": true,
+  "cases": [
+    {
+      "id": "lost_update",
+      "kind": "lost_update",
+      "isolation": "read_committed",
+      "control_ids": [
+        "BE-05-04"
+      ],
+      "setup": [
+        {
+          "sql": "DELETE FROM bga_v35 WHERE id IN (1,2,3)"
+        },
+        {
+          "sql": "INSERT INTO bga_v35(id,value) VALUES (?,?)",
+          "params": [
+            1,
+            10
+          ]
+        }
+      ],
+      "cleanup": [
+        {
+          "sql": "DELETE FROM bga_v35 WHERE id IN (1,2,3)"
+        }
+      ],
+      "steps": [
+        {
+          "session": "a",
+          "action": "begin"
+        },
+        {
+          "session": "b",
+          "action": "begin"
+        },
+        {
+          "session": "a",
+          "action": "query",
+          "sql": "SELECT id, value FROM bga_v35 WHERE id = 1 ORDER BY id",
+          "params": [],
+          "expected": [
+            {
+              "id": 1,
+              "value": 10
+            }
+          ]
+        },
+        {
+          "session": "b",
+          "action": "query",
+          "sql": "SELECT id, value FROM bga_v35 WHERE id = 1 ORDER BY id",
+          "params": [],
+          "expected": [
+            {
+              "id": 1,
+              "value": 10
+            }
+          ]
+        },
+        {
+          "session": "a",
+          "action": "query",
+          "sql": "UPDATE bga_v35 SET value = ? WHERE id = ?",
+          "params": [
+            11,
+            1
+          ],
+          "expect_affected": 1
+        },
+        {
+          "session": "a",
+          "action": "commit"
+        },
+        {
+          "session": "b",
+          "action": "query",
+          "sql": "UPDATE bga_v35 SET value = ? WHERE id = ?",
+          "params": [
+            11,
+            1
+          ],
+          "expect_affected": 1
+        },
+        {
+          "session": "b",
+          "action": "commit"
+        }
+      ],
+      "verify": [
+        {
+          "sql": "SELECT id, value FROM bga_v35  ORDER BY id",
+          "expected": [
+            {
+              "id": 1,
+              "value": 11
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "non_repeatable_read",
+      "kind": "non_repeatable_read",
+      "isolation": "read_committed",
+      "control_ids": [
+        "BE-05-04"
+      ],
+      "setup": [
+        {
+          "sql": "DELETE FROM bga_v35 WHERE id IN (1,2,3)"
+        },
+        {
+          "sql": "INSERT INTO bga_v35(id,value) VALUES (?,?)",
+          "params": [
+            1,
+            10
+          ]
+        }
+      ],
+      "cleanup": [
+        {
+          "sql": "DELETE FROM bga_v35 WHERE id IN (1,2,3)"
+        }
+      ],
+      "steps": [
+        {
+          "session": "a",
+          "action": "begin"
+        },
+        {
+          "session": "a",
+          "action": "query",
+          "sql": "SELECT id, value FROM bga_v35 WHERE id = 1 ORDER BY id",
+          "params": [],
+          "expected": [
+            {
+              "id": 1,
+              "value": 10
+            }
+          ]
+        },
+        {
+          "session": "b",
+          "action": "begin"
+        },
+        {
+          "session": "b",
+          "action": "query",
+          "sql": "UPDATE bga_v35 SET value = ? WHERE id = ?",
+          "params": [
+            12,
+            1
+          ],
+          "expect_affected": 1
+        },
+        {
+          "session": "b",
+          "action": "commit"
+        },
+        {
+          "session": "a",
+          "action": "query",
+          "sql": "SELECT id, value FROM bga_v35 WHERE id = 1 ORDER BY id",
+          "params": [],
+          "expected": [
+            {
+              "id": 1,
+              "value": 12
+            }
+          ]
+        },
+        {
+          "session": "a",
+          "action": "commit"
+        }
+      ],
+      "verify": [
+        {
+          "sql": "SELECT id, value FROM bga_v35  ORDER BY id",
+          "expected": [
+            {
+              "id": 1,
+              "value": 12
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "phantom_read",
+      "kind": "phantom_read",
+      "isolation": "read_committed",
+      "control_ids": [
+        "BE-05-04"
+      ],
+      "setup": [
+        {
+          "sql": "DELETE FROM bga_v35 WHERE id IN (1,2,3)"
+        },
+        {
+          "sql": "INSERT INTO bga_v35(id,value) VALUES (?,?)",
+          "params": [
+            1,
+            10
+          ]
+        }
+      ],
+      "cleanup": [
+        {
+          "sql": "DELETE FROM bga_v35 WHERE id IN (1,2,3)"
+        }
+      ],
+      "steps": [
+        {
+          "session": "a",
+          "action": "begin"
+        },
+        {
+          "session": "a",
+          "action": "query",
+          "sql": "SELECT id, value FROM bga_v35 WHERE value >= 10 ORDER BY id",
+          "params": [],
+          "expected": [
+            {
+              "id": 1,
+              "value": 10
+            }
+          ]
+        },
+        {
+          "session": "b",
+          "action": "begin"
+        },
+        {
+          "session": "b",
+          "action": "query",
+          "sql": "INSERT INTO bga_v35(id,value) VALUES (?,?)",
+          "params": [
+            2,
+            20
+          ],
+          "expect_affected": 1
+        },
+        {
+          "session": "b",
+          "action": "commit"
+        },
+        {
+          "session": "a",
+          "action": "query",
+          "sql": "SELECT id, value FROM bga_v35 WHERE value >= 10 ORDER BY id",
+          "params": [],
+          "expected": [
+            {
+              "id": 1,
+              "value": 10
+            },
+            {
+              "id": 2,
+              "value": 20
+            }
+          ]
+        },
+        {
+          "session": "a",
+          "action": "commit"
+        }
+      ],
+      "verify": [
+        {
+          "sql": "SELECT id, value FROM bga_v35  ORDER BY id",
+          "expected": [
+            {
+              "id": 1,
+              "value": 10
+            },
+            {
+              "id": 2,
+              "value": 20
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "serialization_failure",
+      "kind": "serialization_failure",
+      "isolation": "serializable",
+      "control_ids": [
+        "BE-05-04"
+      ],
+      "setup": [
+        {
+          "sql": "DELETE FROM bga_v35 WHERE id IN (1,2,3)"
+        },
+        {
+          "sql": "INSERT INTO bga_v35(id,value) VALUES (?,?)",
+          "params": [
+            1,
+            10
+          ]
+        },
+        {
+          "sql": "INSERT INTO bga_v35(id,value) VALUES (?,?)",
+          "params": [
+            2,
+            20
+          ]
+        }
+      ],
+      "cleanup": [
+        {
+          "sql": "DELETE FROM bga_v35 WHERE id IN (1,2,3)"
+        }
+      ],
+      "steps": [
+        {
+          "session": "a",
+          "action": "begin"
+        },
+        {
+          "session": "b",
+          "action": "begin"
+        },
+        {
+          "session": "a",
+          "action": "query",
+          "sql": "SELECT id, value FROM bga_v35  ORDER BY id",
+          "params": []
+        },
+        {
+          "session": "b",
+          "action": "query",
+          "sql": "SELECT id, value FROM bga_v35  ORDER BY id",
+          "params": []
+        },
+        {
+          "parallel": [
+            {
+              "session": "a",
+              "action": "query",
+              "sql": "UPDATE bga_v35 SET value = ? WHERE id = ?",
+              "params": [
+                11,
+                1
+              ]
+            },
+            {
+              "session": "b",
+              "action": "query",
+              "sql": "UPDATE bga_v35 SET value = ? WHERE id = ?",
+              "params": [
+                21,
+                2
+              ],
+              "expect_error": "ER_LOCK_DEADLOCK"
+            }
+          ]
+        },
+        {
+          "session": "b",
+          "action": "rollback"
+        },
+        {
+          "session": "a",
+          "action": "commit"
+        }
+      ],
+      "verify": [
+        {
+          "sql": "SELECT id, value FROM bga_v35  ORDER BY id",
+          "expected": [
+            {
+              "id": 1,
+              "value": 11
+            },
+            {
+              "id": 2,
+              "value": 20
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "retry_recovery",
+      "kind": "retry_recovery",
+      "isolation": "read_committed",
+      "control_ids": [
+        "BE-05-04"
+      ],
+      "setup": [
+        {
+          "sql": "DELETE FROM bga_v35 WHERE id IN (1,2,3)"
+        },
+        {
+          "sql": "INSERT INTO bga_v35(id,value) VALUES (?,?)",
+          "params": [
+            1,
+            10
+          ]
+        }
+      ],
+      "cleanup": [
+        {
+          "sql": "DELETE FROM bga_v35 WHERE id IN (1,2,3)"
+        }
+      ],
+      "steps": [
+        {
+          "session": "a",
+          "action": "begin"
+        },
+        {
+          "session": "a",
+          "action": "query",
+          "sql": "UPDATE bga_v35 SET value = ? WHERE id = ?",
+          "params": [
+            11,
+            1
+          ],
+          "expect_affected": 1
+        },
+        {
+          "session": "b",
+          "action": "begin"
+        },
+        {
+          "session": "b",
+          "action": "query",
+          "sql": "UPDATE bga_v35 SET value = ? WHERE id = ?",
+          "params": [
+            12,
+            1
+          ],
+          "expect_error": "ER_LOCK_WAIT_TIMEOUT"
+        },
+        {
+          "session": "b",
+          "action": "rollback"
+        },
+        {
+          "session": "a",
+          "action": "commit"
+        },
+        {
+          "session": "b",
+          "action": "retry",
+          "sql": "UPDATE bga_v35 SET value = ? WHERE id = ?",
+          "params": [
+            12,
+            1
+          ],
+          "max_attempts": 2,
+          "retryable_errors": [
+            "40001",
+            "40P01",
+            "ER_LOCK_DEADLOCK",
+            "ER_LOCK_WAIT_TIMEOUT",
+            "55P03"
+          ],
+          "expect_affected": 1
+        }
+      ],
+      "verify": [
+        {
+          "sql": "SELECT id, value FROM bga_v35  ORDER BY id",
+          "expected": [
+            {
+              "id": 1,
+              "value": 12
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "evidence_contract": "Database assertions are authoritative; no lock claim without lock_probe observation."
+}

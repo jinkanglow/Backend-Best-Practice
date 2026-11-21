@@ -1,0 +1,17 @@
+{
+  "api_validation": {
+    "enabled": true,
+    "sensitive_methods": [
+      "create",
+      "save",
+      "insert"
+    ]
+  },
+  "sql_parameterization": {
+    "enabled": true,
+    "query_methods": [
+      "query",
+      "execute"
+    ]
+  }
+}

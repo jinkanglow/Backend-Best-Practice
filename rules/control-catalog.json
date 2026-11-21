@@ -1,0 +1,1280 @@
+{
+  "schema_version": "1.0",
+  "controls": [
+    {
+      "id": "BE-01-01",
+      "category": "architecture-boundaries",
+      "title": "Separate transport DTOs from application commands and domain state",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-01-02",
+      "category": "architecture-boundaries",
+      "title": "Domain modules must not import framework, database or cloud SDK modules",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-01-03",
+      "category": "architecture-boundaries",
+      "title": "Define module ownership, public APIs and permitted dependency directions",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-01-04",
+      "category": "architecture-boundaries",
+      "title": "Cross-module writes require explicit transaction or messaging contract",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-01-05",
+      "category": "architecture-boundaries",
+      "title": "Avoid premature microservice extraction; document coupling and deployment cost",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-02-01",
+      "category": "api-contracts",
+      "title": "Validate content type, size, shape and semantic constraints before side effects",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-02-02",
+      "category": "api-contracts",
+      "title": "Use consistent errors with stable machine-readable codes and correlation identifiers",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-02-03",
+      "category": "api-contracts",
+      "title": "Document authentication, authorization, pagination, limits and retry semantics",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-02-04",
+      "category": "api-contracts",
+      "title": "Support conditional requests and optimistic concurrency where appropriate",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-02-05",
+      "category": "api-contracts",
+      "title": "Version incompatible public contract changes and test consumer compatibility",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-03-01",
+      "category": "identity-authorization",
+      "title": "Authenticate caller and authorize each resource action separately",
+      "severity": "high",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-03-02",
+      "category": "identity-authorization",
+      "title": "Enforce tenant scoping at query boundary, not only at HTTP routing",
+      "severity": "high",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-03-03",
+      "category": "identity-authorization",
+      "title": "Use deny-by-default policies and explicit role/action/resource matrices",
+      "severity": "high",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-03-04",
+      "category": "identity-authorization",
+      "title": "Prevent IDOR with cross-user and cross-tenant negative tests",
+      "severity": "high",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-03-05",
+      "category": "identity-authorization",
+      "title": "Rotate credentials and sessions; audit privilege changes without logging secrets",
+      "severity": "high",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-04-01",
+      "category": "data-integrity",
+      "title": "Enforce business invariants with database constraints when possible",
+      "severity": "high",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-04-02",
+      "category": "data-integrity",
+      "title": "Choose transaction boundaries around atomic business operations",
+      "severity": "high",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-04-03",
+      "category": "data-integrity",
+      "title": "Use optimistic locking or serialized writes for concurrent updates",
+      "severity": "high",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-04-04",
+      "category": "data-integrity",
+      "title": "Test rollback, uniqueness races, deadlocks and isolation assumptions",
+      "severity": "high",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-04-05",
+      "category": "data-integrity",
+      "title": "Document retention, deletion, backups, restore and encryption requirements",
+      "severity": "high",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-05-01",
+      "category": "migration-safety",
+      "title": "Prefer expand-backfill-contract for rolling deployments",
+      "severity": "high",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-05-02",
+      "category": "migration-safety",
+      "title": "Check locks, full-table rewrites, index build modes and batch size",
+      "severity": "high",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-05-03",
+      "category": "migration-safety",
+      "title": "Prove old and new application versions coexist during migration",
+      "severity": "high",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-05-04",
+      "category": "migration-safety",
+      "title": "Specify rollback or forward-fix procedure; destructive changes require approval",
+      "severity": "high",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-05-05",
+      "category": "migration-safety",
+      "title": "Test migration against representative volume and inspect execution plans",
+      "severity": "high",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-06-01",
+      "category": "concurrency-idempotency",
+      "title": "Define idempotency scope, key uniqueness, expiry and request fingerprint",
+      "severity": "high",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-06-02",
+      "category": "concurrency-idempotency",
+      "title": "Persist idempotency decision atomically with business effects",
+      "severity": "high",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-06-03",
+      "category": "concurrency-idempotency",
+      "title": "Prevent duplicate work under concurrent requests using unique constraints",
+      "severity": "high",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-06-04",
+      "category": "concurrency-idempotency",
+      "title": "Specify at-least-once delivery assumptions and deduplication boundaries",
+      "severity": "high",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-06-05",
+      "category": "concurrency-idempotency",
+      "title": "Test conflicting payloads, retries, timeout-after-commit and parallel execution",
+      "severity": "high",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-07-01",
+      "category": "messaging-workflows",
+      "title": "Define event schemas, ownership, versioning and consumer compatibility",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-07-02",
+      "category": "messaging-workflows",
+      "title": "Use transactional outbox when DB commit and message publication must align",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-07-03",
+      "category": "messaging-workflows",
+      "title": "Make consumers idempotent; distinguish retryable from permanent failures",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-07-04",
+      "category": "messaging-workflows",
+      "title": "Specify dead-letter, poison-message, ordering and replay procedures",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-07-05",
+      "category": "messaging-workflows",
+      "title": "Test workflow timeout, cancellation, compensation and partial failure",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-08-01",
+      "category": "reliability-resilience",
+      "title": "Set explicit connect, read and total deadlines for network operations",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-08-02",
+      "category": "reliability-resilience",
+      "title": "Retry only safe operations with bounded exponential backoff and jitter",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-08-03",
+      "category": "reliability-resilience",
+      "title": "Bound queues, concurrency, payloads and resource consumption",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-08-04",
+      "category": "reliability-resilience",
+      "title": "Implement graceful shutdown, readiness and liveness semantics",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-08-05",
+      "category": "reliability-resilience",
+      "title": "Test dependency failures, cascading load, cancellation and recovery",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-09-01",
+      "category": "security-boundaries",
+      "title": "Threat-model external inputs, deserialization, SSRF and injection sinks",
+      "severity": "high",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-09-02",
+      "category": "security-boundaries",
+      "title": "Use parameterized queries; avoid dynamic SQL identifiers without allowlists",
+      "severity": "high",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-09-03",
+      "category": "security-boundaries",
+      "title": "Protect credentials with secret management and least-privilege access",
+      "severity": "high",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-09-04",
+      "category": "security-boundaries",
+      "title": "Set security headers, CORS, CSRF and cookie controls as applicable",
+      "severity": "high",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-09-05",
+      "category": "security-boundaries",
+      "title": "Redact sensitive values in logs, traces, errors and diagnostics",
+      "severity": "high",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-10-01",
+      "category": "observability",
+      "title": "Propagate trace context and request identifiers across boundaries",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-10-02",
+      "category": "observability",
+      "title": "Use structured logs with stable event names and safe cardinality",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-10-03",
+      "category": "observability",
+      "title": "Define SLIs/SLOs and alert on user-impacting symptoms",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-10-04",
+      "category": "observability",
+      "title": "Instrument latency, errors, saturation and dependency outcomes",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-10-05",
+      "category": "observability",
+      "title": "Provide incident runbooks, dashboards and diagnostic queries",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-11-01",
+      "category": "performance-capacity",
+      "title": "Define workload, concurrency, dataset and latency percentile targets",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-11-02",
+      "category": "performance-capacity",
+      "title": "Profile hot paths and measure database query count and execution plans",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-11-03",
+      "category": "performance-capacity",
+      "title": "Avoid unbounded pagination, N+1 queries and memory buffering",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-11-04",
+      "category": "performance-capacity",
+      "title": "Test sustained, spike, soak and degradation behavior",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-11-05",
+      "category": "performance-capacity",
+      "title": "Report environment, warmup, sample size and uncertainty with benchmarks",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-12-01",
+      "category": "operations-deployment",
+      "title": "Use reproducible builds, pinned dependencies and provenance checks",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-12-02",
+      "category": "operations-deployment",
+      "title": "Validate configuration and required secrets at startup",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-12-03",
+      "category": "operations-deployment",
+      "title": "Deploy with health checks, canaries and rollback criteria",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-12-04",
+      "category": "operations-deployment",
+      "title": "Protect production changes with least privilege and approvals",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-12-05",
+      "category": "operations-deployment",
+      "title": "Test backup restore and document RPO/RTO evidence",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-13-01",
+      "category": "testing-verification",
+      "title": "Map each critical invariant to executable positive and negative tests",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-13-02",
+      "category": "testing-verification",
+      "title": "Use real database engine for transaction and SQL semantics",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-13-03",
+      "category": "testing-verification",
+      "title": "Test contract, integration, concurrency, failure and migration paths",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-13-04",
+      "category": "testing-verification",
+      "title": "Distinguish mocked unit evidence from actual infrastructure evidence",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-13-05",
+      "category": "testing-verification",
+      "title": "Record commands, versions, artifacts, environment and timestamps",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-14-01",
+      "category": "code-maintainability",
+      "title": "Use names that reveal domain meaning and eliminate misleading abstractions",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-14-02",
+      "category": "code-maintainability",
+      "title": "Keep functions cohesive; avoid arbitrary line-count limits",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-14-03",
+      "category": "code-maintainability",
+      "title": "Separate commands from queries where it clarifies side effects",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-14-04",
+      "category": "code-maintainability",
+      "title": "Keep error handling explicit and preserve cause/context",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-14-05",
+      "category": "code-maintainability",
+      "title": "Refactor behind behavioral tests; avoid speculative abstractions",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-15-01",
+      "category": "configuration-supply-chain",
+      "title": "Validate environment-specific config schema and startup requirements",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-15-02",
+      "category": "configuration-supply-chain",
+      "title": "Do not expose secrets in repository, logs or generated reports",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-15-03",
+      "category": "configuration-supply-chain",
+      "title": "Pin dependency versions and monitor vulnerable dependencies",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-15-04",
+      "category": "configuration-supply-chain",
+      "title": "Use restricted build permissions and isolated CI credentials",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-15-05",
+      "category": "configuration-supply-chain",
+      "title": "Record SBOM or equivalent dependency inventory for release",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-16-01",
+      "category": "caching-consistency",
+      "title": "Define cache ownership, key schema, TTL and invalidation triggers",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-16-02",
+      "category": "caching-consistency",
+      "title": "Document stale-read tolerance and read-your-writes expectations",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-16-03",
+      "category": "caching-consistency",
+      "title": "Prevent cache stampedes and unbounded key cardinality",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-16-04",
+      "category": "caching-consistency",
+      "title": "Test eviction, cache outage and concurrent refresh",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-16-05",
+      "category": "caching-consistency",
+      "title": "Never treat cache as source of truth without an explicit contract",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-17-01",
+      "category": "files-and-background-jobs",
+      "title": "Validate upload size, media type, path and storage authorization",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-17-02",
+      "category": "files-and-background-jobs",
+      "title": "Stream large files and cap memory and disk use",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-17-03",
+      "category": "files-and-background-jobs",
+      "title": "Make scheduled jobs lease-safe and restartable",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-17-04",
+      "category": "files-and-background-jobs",
+      "title": "Track progress, cancellation, retries and artifact retention",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    },
+    {
+      "id": "BE-17-05",
+      "category": "files-and-background-jobs",
+      "title": "Test partial writes, corrupt files and duplicate job delivery",
+      "severity": "medium",
+      "verification": "manual_or_runtime_evidence",
+      "implementation": "specified_not_automated",
+      "applicability": "project_declared",
+      "required_evidence": [
+        "code_or_config",
+        "reproducible_test_or_review",
+        "observed_result"
+      ],
+      "unknown_policy": "do_not_pass"
+    }
+  ]
+}

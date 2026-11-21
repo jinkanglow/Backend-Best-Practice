@@ -1,0 +1,107 @@
+{
+  "schema_version": "3.2",
+  "test_database_acknowledged": true,
+  "allow_mutation_on_test_database": true,
+  "cases": [
+    {
+      "id": "parallel-read-committed",
+      "kind": "non_repeatable_read",
+      "control_ids": [
+        "BE-04-01"
+      ],
+      "isolation": "read_committed",
+      "lock_timeout_ms": 1000,
+      "setup": [
+        {
+          "session": "observer",
+          "action": "query",
+          "sql": "DELETE FROM bga_v32 WHERE id = 1"
+        },
+        {
+          "session": "observer",
+          "action": "query",
+          "sql": "INSERT INTO bga_v32 (id, value) VALUES (1, 10)"
+        }
+      ],
+      "phases": [
+        {
+          "steps": [
+            {
+              "session": "a",
+              "action": "begin"
+            },
+            {
+              "session": "b",
+              "action": "begin"
+            }
+          ]
+        },
+        {
+          "steps": [
+            {
+              "session": "a",
+              "action": "query",
+              "sql": "SELECT value FROM bga_v32 WHERE id = 1",
+              "assert": {
+                "first_row": {
+                  "value": 10
+                }
+              }
+            }
+          ]
+        },
+        {
+          "steps": [
+            {
+              "session": "b",
+              "action": "query",
+              "sql": "UPDATE bga_v32 SET value = 20 WHERE id = 1",
+              "assert": {
+                "affected_rows": 1
+              }
+            }
+          ]
+        },
+        {
+          "steps": [
+            {
+              "session": "b",
+              "action": "commit"
+            }
+          ]
+        },
+        {
+          "steps": [
+            {
+              "session": "a",
+              "action": "query",
+              "sql": "SELECT value FROM bga_v32 WHERE id = 1",
+              "assert": {
+                "first_row": {
+                  "value": 20
+                }
+              }
+            }
+          ]
+        },
+        {
+          "steps": [
+            {
+              "session": "a",
+              "action": "rollback"
+            }
+          ]
+        }
+      ],
+      "cleanup": [
+        {
+          "session": "observer",
+          "action": "query",
+          "sql": "DELETE FROM bga_v32 WHERE id = 1"
+        }
+      ]
+    }
+  ],
+  "engine": "postgres",
+  "connection_env": "BACKEND_GUARD_PG_URL"
+}

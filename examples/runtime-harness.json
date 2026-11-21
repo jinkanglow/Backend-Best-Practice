@@ -1,0 +1,13 @@
+{
+  "tests": [
+    {
+      "id": "node-unit-tests",
+      "argv": [
+        "npm",
+        "test"
+      ],
+      "timeout_ms": 30000,
+      "control_ids": []
+    }
+  ]
+}

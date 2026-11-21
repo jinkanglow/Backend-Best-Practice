@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.9",
+  "tests": [
+    {
+      "id": "self-test",
+      "kind": "command",
+      "argv": ["node", "--version"],
+      "control_ids": ["BE-13-05"],
+      "timeout_ms": 5000
+    }
+  ]
+}

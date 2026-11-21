@@ -1,0 +1,16 @@
+{
+  "domain_boundary": {
+    "domain_roots": [
+      "src/domain"
+    ],
+    "forbidden_packages": [
+      "express",
+      "@nestjs/common",
+      "pg",
+      "mysql2"
+    ],
+    "forbidden_paths": [
+      "src/infrastructure"
+    ]
+  }
+}

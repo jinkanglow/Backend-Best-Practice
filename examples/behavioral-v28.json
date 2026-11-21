@@ -1,0 +1,22 @@
+{
+  "schema_version": "2.8",
+  "timeout_ms": 3000,
+  "tests": [
+    {
+      "id": "tenant-cross-access",
+      "kind": "authorization_negative",
+      "owner": {"url": "http://127.0.0.1:3000/api/private-resource/123", "token_env": "BGA_OWNER_TOKEN"},
+      "outsider": {"url": "http://127.0.0.1:3000/api/private-resource/123", "token_env": "BGA_OTHER_TENANT_TOKEN"},
+      "expect_owner_status": 200,
+      "expect_outsider_statuses": [403, 404]
+    },
+    {
+      "id": "payment-retry-single-effect",
+      "kind": "idempotency_concurrent",
+      "concurrency": 3,
+      "request": {"url": "http://127.0.0.1:3000/api/test-payments", "method": "POST", "token_env": "BGA_OWNER_TOKEN", "body": {"idempotency_key": "test-run-unique-key"}},
+      "probe": {"url": "http://127.0.0.1:3000/api/test-payment-count", "counter_field": "count"},
+      "expected_delta": 1
+    }
+  ]
+}

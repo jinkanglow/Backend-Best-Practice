@@ -1,0 +1,12 @@
+{
+  "project": "sample-backend",
+  "critical_paths": [
+    "POST /payments",
+    "POST /orders"
+  ],
+  "deployment": "production",
+  "data_classification": "confidential",
+  "rpo_minutes": 15,
+  "rto_minutes": 60,
+  "latency_p95_ms": 300
+}
