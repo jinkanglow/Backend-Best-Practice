@@ -40,7 +40,7 @@
       "control_ids": [
         "BE-02-01"
       ],
-      "status": "implemented_candidate_only",
+      "status": "candidate",
       "entrypoint": "lib/control-detectors.mjs",
       "scope": "Candidate direct request body use at configured side-effect methods",
       "limitations": [
@@ -57,7 +57,7 @@
       "control_ids": [
         "BE-09-02"
       ],
-      "status": "implemented_candidate_only",
+      "status": "candidate",
       "entrypoint": "lib/control-detectors.mjs",
       "scope": "Candidate interpolated or concatenated first argument to configured query methods",
       "limitations": [

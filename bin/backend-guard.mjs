@@ -18,7 +18,7 @@ import {runHarness,harnessEvidence} from '../lib/runtime.mjs';
 import {verify,evaluateVerified,frameworkFindings} from '../lib/verified.mjs';
 import {executeAssurance,decideAssurance,signEvidence,verifyEvidenceSignature} from '../lib/assurance.mjs';
 import {attest,verifyAttestation,readTrustedRunners,legacyManifestHash} from '../lib/attestation.mjs';
-import { pathToFileURL } from 'node:url';
+import { pathToFileURL, fileURLToPath } from 'node:url';
 
 import {analyze,filesUnder,RULES,loadTS} from '../lib/analyzer.mjs';
 function scan(root,config){return analyze(root,config)}
@@ -164,7 +164,7 @@ export async function main(argv=process.argv.slice(2)){
    return result.summary.matched===result.summary.total?0:1;
   }
   if(cmd==='coverage'){
-   const file=opt(args,'--registry',path.resolve(path.dirname(new URL(import.meta.url).pathname),'../rules/detector-registry.json'));
+   const file=opt(args,'--registry',path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../rules/detector-registry.json'));
    const result=auditControlCoverage(catalog,JSON.parse(fs.readFileSync(file,'utf8')).detectors);
    const out=opt(args,'--output',null),body=JSON.stringify(result,null,2)+'\n';if(out)fs.writeFileSync(out,body);else console.log(body);
    return result.rejected.length?2:0;
