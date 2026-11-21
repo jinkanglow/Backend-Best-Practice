@@ -1,0 +1,9 @@
+{
+  "name": "development",
+  "block_severities": [
+    "critical"
+  ],
+  "require_evidence": false,
+  "require_project_contract": false,
+  "unknown_handling": "report"
+}

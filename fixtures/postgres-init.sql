@@ -1,0 +1,1 @@
+CREATE TABLE IF NOT EXISTS guard_integration_pg (id INTEGER PRIMARY KEY, value TEXT NOT NULL);

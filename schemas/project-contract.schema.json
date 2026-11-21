@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "project",
+    "critical_paths",
+    "deployment"
+  ],
+  "properties": {
+    "project": {
+      "type": "string",
+      "minLength": 1
+    },
+    "critical_paths": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "deployment": {
+      "enum": [
+        "local",
+        "internal",
+        "public",
+        "production"
+      ]
+    },
+    "data_classification": {
+      "enum": [
+        "public",
+        "internal",
+        "confidential",
+        "regulated"
+      ]
+    },
+    "rpo_minutes": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "rto_minutes": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "latency_p95_ms": {
+      "type": "integer",
+      "minimum": 1
+    }
+  },
+  "additionalProperties": true
+}

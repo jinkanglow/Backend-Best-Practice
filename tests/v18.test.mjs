@@ -1,0 +1,12 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';import os from 'node:os';import path from 'node:path';
+import {catalog,evaluateControls,detectAdapters} from '../lib/controls.mjs';
+import {runHarness,harnessEvidence} from '../lib/runtime.mjs';
+const root=path.resolve('.');
+test('catalog evaluates all 85 controls without auto-pass',()=>{const r=evaluateControls({root,report:{findings:[]},profile:{require_evidence:true}});assert.equal(catalog.length,85);assert.equal(r.summary.unknown,85);assert.equal(r.exit_code,2);});
+test('manifest adapter detection is evidence-bound',()=>{const dir=fs.mkdtempSync(path.join(os.tmpdir(),'be-adapter-'));try{fs.writeFileSync(path.join(dir,'package.json'),JSON.stringify({dependencies:{express:'1.0.0'}}));const r=detectAdapters(dir);assert.equal(r.frameworks[0].id,'express');assert.equal(r.frameworks[0].confidence,'declared_dependency_only');}finally{fs.rmSync(dir,{recursive:true,force:true});}});
+test('evidence passes are attested and failures block',()=>{const e={control_id:catalog[0].id,result:'fail',method:'automated_test',observed_at:new Date().toISOString(),artifact:'test',artifact_sha256:'a'.repeat(64),observation:'failed'};const r=evaluateControls({root,report:{findings:[]},evidence:[e],profile:{block_severities:['medium']}});assert.equal(r.exit_code,1);assert.equal(r.summary.fail,1);});
+test('reject malformed evidence and do not count as passed',()=>{const r=evaluateControls({root,report:{findings:[]},evidence:[{control_id:catalog[0].id,result:'pass'}],profile:{require_evidence:true}});assert.equal(r.summary.pass,0);assert.equal(r.rejected_evidence.length,1);});
+test('harness runs a real subprocess and hashes output',()=>{const r=runHarness(root,{tests:[{id:'smoke',argv:[process.execPath,'-e','process.stdout.write("ok")'],control_ids:[catalog[0].id]}]});assert.equal(r.summary.pass,1);assert.match(r.tests[0].artifact_sha256,/^[a-f0-9]{64}$/);assert.equal(harnessEvidence(r).length,1);});
+test('harness reports failure rather than fabricating success',()=>{const r=runHarness(root,{tests:[{id:'fail',argv:[process.execPath,'-e','process.exit(5)']}]});assert.equal(r.summary.fail,1);assert.equal(r.tests[0].exit_code,5);});

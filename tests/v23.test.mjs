@@ -1,0 +1,8 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {architectureMetrics} from '../lib/architecture-metrics.mjs';import {compareArchitecture} from '../lib/architecture-baseline.mjs';
+const graph=(edges,unresolved=[])=>({dependency_graph:{edges,unresolved}});
+test('iterative SCC handles 5000-node chain without recursion',()=>{const edges=Array.from({length:4999},(_,i)=>({from:`n${i}`,to:`n${i+1}`}));const r=architectureMetrics(graph(edges));assert.equal(r.node_count,5000);assert.deepEqual(r.cycles,[])});
+test('unresolved separate array changes status',()=>{const r=architectureMetrics(graph([{from:'a',to:'b'}],[{from:'a',specifier:'./missing'}]));assert.equal(r.status,'partial');assert.equal(r.unresolved_count,1)});
+test('baseline blocks new cycle',()=>{const a=graph([{from:'a',to:'b'},{from:'b',to:'a'}]);const b=graph([{from:'a',to:'b'}]);const r=compareArchitecture(a,b);assert.equal(r.exit_code,1);assert.deepEqual(r.new_cycles,[['a','b']])});
+test('baseline accepts pre-existing cycle, not blanket compliance',()=>{const a=graph([{from:'a',to:'b'},{from:'b',to:'a'}]);const r=compareArchitecture(a,a);assert.equal(r.exit_code,0);assert.equal(r.status,'pass_no_new_cycles')});
+test('baseline strict fails closed on unresolved imports',()=>{const a=graph([{from:'a',to:'b'}],[{from:'a',specifier:'unknown'}]);assert.equal(compareArchitecture(a,a).exit_code,2);assert.equal(compareArchitecture(a,a,{require_complete:false}).status,'pass_with_incomplete_graph')});
+test('baseline honors allowed cycle budget',()=>{const a=graph([{from:'a',to:'b'},{from:'b',to:'a'}]);assert.equal(compareArchitecture(a,graph([]),{max_new_cycles:1}).exit_code,0)});

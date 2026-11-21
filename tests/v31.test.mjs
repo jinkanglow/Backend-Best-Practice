@@ -1,0 +1,13 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {executeTransactionSchedule} from '../lib/transaction-scheduler.mjs';
+const env={BACKEND_GUARD_ALLOW_DB_TESTS:'yes',TEST_URL:'mock'};
+const base={schema_version:'3.1',engine:'postgres',connection_env:'TEST_URL',test_database_acknowledged:true,allow_mutation_on_test_database:true,cases:[{id:'isolation',kind:'non_repeatable_read',isolation:'read_committed',control_ids:['BE-04-01'],steps:[{id:'a-start',session:'a',action:'begin'},{id:'b-start',session:'b',action:'begin'},{id:'a-read',session:'a',action:'query',sql:'SELECT value FROM state',assert:{first_row:{value:1}}},{id:'b-rollback',session:'b',action:'rollback'},{id:'a-rollback',session:'a',action:'rollback'}],expected:{outcome:'observed',assertion_step:'a-read'}}]};
+const driver=(row={value:1},fail=false)=>{const calls=[];let closed=0;return {calls,get closed(){return closed},drivers:{postgres:{connect:async()=>({query:async(sql)=>{calls.push(sql);if(fail&&sql.startsWith('SELECT'))throw Object.assign(Error('serialization'),{code:'40001'});return {rows:sql.startsWith('SELECT')?[row]:[],rowCount:1}},close:async()=>{closed++}})}}}};
+test('dual sessions execute ordered steps and clean up',async()=>{const d=driver();const r=await executeTransactionSchedule(base,{drivers:d.drivers,env});assert.equal(r.assessment.exit_code,0);assert.equal(d.closed,2);assert.equal(r.cases[0].steps.length,5)});
+test('wrong observed row fails gate',async()=>{const d=driver({value:2});const r=await executeTransactionSchedule(base,{drivers:d.drivers,env});assert.equal(r.assessment.exit_code,1)});
+test('unexpected serialization failure yields insufficient evidence',async()=>{const d=driver({},true);const r=await executeTransactionSchedule(base,{drivers:d.drivers,env});assert.equal(r.assessment.exit_code,2)});
+test('expected serialization failure is verified by error code',async()=>{const d=driver({},true);const m=structuredClone(base);m.cases[0].steps[2]={...m.cases[0].steps[2],expect_error:'40001',assert:undefined};const r=await executeTransactionSchedule(m,{drivers:d.drivers,env});assert.equal(r.assessment.exit_code,0)});
+test('requires explicit mutation permission',async()=>{await assert.rejects(()=>executeTransactionSchedule({...base,allow_mutation_on_test_database:false},{env}),/acknowledgement/)});
+test('rejects DDL before connecting',async()=>{const m=structuredClone(base);m.cases[0].steps[2].sql='DROP TABLE state';await assert.rejects(()=>executeTransactionSchedule(m,{env}),/DML\/query/)});
+test('missing assertion step is rejected',async()=>{const m=structuredClone(base);m.cases[0].expected.assertion_step='absent';await assert.rejects(()=>executeTransactionSchedule(m,{env}),/does not exist/)});

@@ -1,0 +1,4 @@
+{
+  "strict": true,
+  "required_behavioral_controls": ["BE-03-02", "BE-06-02"]
+}

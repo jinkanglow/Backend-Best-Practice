@@ -1,0 +1,15 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {executeConflictRecovery} from '../lib/conflict-recovery.mjs';
+const env={BACKEND_GUARD_ALLOW_DB_TESTS:'yes',TEST_DB:'mock'};
+function manifest(kind='lock_conflict'){return {schema_version:'3.3',engine:'postgres',connection_env:'TEST_DB',test_database_acknowledged:true,allow_mutation_on_test_database:true,cases:[{id:'lock-1',kind,control_ids:['BE-04-01'],isolation:'read_committed',lock_timeout_ms:100,probe_ms:10,max_retries:2,retryable_errors:['55P03','40001'],release:'commit',setup:[{sql:'DELETE FROM bga_v33 WHERE id=1'}],cleanup:[{sql:'DELETE FROM bga_v33 WHERE id=1'}],hold:{sql:'UPDATE bga_v33 SET value=20 WHERE id=1'},contender:{sql:'UPDATE bga_v33 SET value=30 WHERE id=1'},verify:{sql:'SELECT value FROM bga_v33 WHERE id=1',expected_rows:1,expected_value:30}}]};}
+function drivers({early=false,firstError=null,badFinal=false}={}){
+ let next=0,release,attempt=0;const unlock=new Promise(r=>release=r),queries=[],closed=[];
+ return {queries,closed,drivers:{postgres:{connect:async()=>{const id=next++;return {query:async(sql)=>{queries.push([id,sql]);if(sql.startsWith('UPDATE')){if(id===2){attempt++;if(firstError&&attempt===1){await unlock;throw Object.assign(Error('conflict'),{code:firstError})}if(!early)await unlock;}return {rowCount:1,rows:[]};}if(id===1&&sql==='COMMIT')release();if(sql.startsWith('SELECT'))return {rows:[{value:badFinal?20:30}],rowCount:1};return {rowCount:1,rows:[]};},close:async()=>{closed.push(id)}}}}}};
+}
+test('pending contender and verified final state',async()=>{const d=drivers(),r=await executeConflictRecovery(manifest(),{drivers:d.drivers,env});assert.equal(r.assessment.exit_code,0);assert.equal(r.cases[0].events.find(e=>e.stage==='contention_probe').pending,true);assert.equal(d.closed.length,3)});
+test('early completion is a failed lock coordination assertion',async()=>{const d=drivers({early:true}),r=await executeConflictRecovery(manifest(),{drivers:d.drivers,env});assert.equal(r.assessment.exit_code,1)});
+test('incorrect final database state fails',async()=>{const d=drivers({badFinal:true}),r=await executeConflictRecovery(manifest(),{drivers:d.drivers,env});assert.equal(r.assessment.exit_code,1)});
+test('expected conflict error triggers rollback and bounded retry',async()=>{const d=drivers({firstError:'55P03'}),r=await executeConflictRecovery(manifest('retry_recovery'),{drivers:d.drivers,env});assert.equal(r.assessment.exit_code,0);assert.ok(r.cases[0].events.some(e=>e.stage==='retry_success'));assert.ok(d.queries.some(x=>x[0]===2&&x[1]==='ROLLBACK'))});
+test('unlisted database error is insufficient evidence',async()=>{const d=drivers({firstError:'08006'}),r=await executeConflictRecovery(manifest(),{drivers:d.drivers,env});assert.equal(r.assessment.exit_code,2)});
+test('rejects DDL and missing opt-in',async()=>{const m=manifest();m.cases[0].setup[0].sql='DROP TABLE bga_v33';await assert.rejects(()=>executeConflictRecovery(m,{env}),/Unsafe/);m.cases[0].setup[0].sql='DELETE FROM bga_v33 WHERE id=1';await assert.rejects(()=>executeConflictRecovery(m,{env:{TEST_DB:'mock'}}),/opt-in/)});

@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Backend assurance finding",
+  "type": "object",
+  "required": [
+    "rule_id",
+    "status",
+    "confidence",
+    "evidence"
+  ],
+  "properties": {
+    "rule_id": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "pass",
+        "fail",
+        "warning",
+        "unknown",
+        "not_applicable"
+      ]
+    },
+    "confidence": {
+      "enum": [
+        "confirmed",
+        "candidate",
+        "unknown"
+      ]
+    },
+    "evidence": {
+      "type": "object"
+    },
+    "uri": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "line": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1
+    }
+  },
+  "additionalProperties": true
+}

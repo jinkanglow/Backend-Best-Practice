@@ -1,0 +1,21 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import crypto from 'node:crypto';
+import {attest,verifyAttestation,canonicalHash} from '../lib/attestation.mjs';
+const keys=crypto.generateKeyPairSync('ed25519');
+const privateKey=keys.privateKey.export({format:'pem',type:'pkcs8'});
+const publicKey=keys.publicKey.export({format:'pem',type:'spki'});
+const manifest={schema_version:'2.0',tests:[]};
+const manifestHash=canonicalHash(manifest);
+const execution={schema_version:'2.0',runner:'backend-guard-v2',manifest_sha256:manifestHash,runs:[]};
+const env={image_digest:'sha256:integration-image-placeholder'};
+const options={trustedRunners:{'protected-ci':publicKey},expectedManifestHash:manifestHash,expectedImageDigest:env.image_digest};
+function signed(){return attest(execution,{privateKey,runnerId:'protected-ci',runId:'run-1',manifestHash,environment:env})}
+test('Ed25519 attestation verifies against pinned runner identity',()=>{assert.equal(verifyAttestation(signed(),options).valid,true)});
+test('payload tampering fails',()=>{const e=signed();e.execution.runs.push({status:'pass'});assert.equal(verifyAttestation(e,options).valid,false)});
+test('claim tampering fails',()=>{const e=signed();e.claims.run_id='run-2';assert.equal(verifyAttestation(e,options).valid,false)});
+test('unknown runner rejected',()=>{assert.ok(verifyAttestation(signed(),{...options,trustedRunners:{}}).errors.includes('untrusted_runner'))});
+test('replay rejected by verifier supplied seen-run set',()=>{assert.ok(verifyAttestation(signed(),{...options,seenRunIds:new Set(['run-1'])}).errors.includes('replayed_or_missing_run_id'))});
+test('wrong environment digest rejected',()=>{assert.ok(verifyAttestation(signed(),{...options,expectedImageDigest:'sha256:other'}).errors.includes('environment_mismatch'))});
+test('expired attestation rejected',()=>{assert.ok(verifyAttestation(signed(),{...options,now:Date.now()+7200000}).errors.includes('expired_or_invalid_time'))});
+test('manifest mismatch rejected',()=>{assert.throws(()=>attest(execution,{privateKey,runnerId:'x',runId:'r',manifestHash:'bad',environment:env}))});

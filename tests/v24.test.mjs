@@ -1,0 +1,12 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import {runBenchmark,auditControlCoverage} from '../lib/benchmark.mjs';
+import {catalog} from '../lib/controls.mjs';
+const corpus=JSON.parse(fs.readFileSync(new URL('../benchmarks/architecture.json',import.meta.url),'utf8'));
+test('labeled benchmark evaluates cycle and incomplete evidence',()=>{const r=runBenchmark(corpus);assert.equal(r.summary.matched,3);assert.equal(r.summary.tp,1);assert.equal(r.summary.unknown,1)});
+test('benchmark rejects duplicate IDs',()=>assert.throws(()=>runBenchmark({...corpus,cases:[corpus.cases[0],corpus.cases[0]]}),/Invalid benchmark case/));
+test('precision undefined when no positive predictions',()=>{const r=runBenchmark({...corpus,cases:[corpus.cases[1]]});assert.equal(r.summary.precision,null);assert.equal(r.summary.recall,null)});
+test('coverage defaults to unimplemented, never claims compliance',()=>{const r=auditControlCoverage(catalog,[]);assert.equal(r.total,85);assert.equal(r.declared_implemented,0);assert.equal(r.unimplemented,85)});
+test('coverage rejects unknown controls',()=>{const r=auditControlCoverage(catalog,[{id:'x',status:'implemented',control_ids:['fake']}]);assert.equal(r.rejected[0].reason,'unknown_control')});
+test('declared detector is not verified control',()=>{const r=auditControlCoverage(catalog,[{id:'x',status:'implemented',control_ids:[catalog[0].id]}]);assert.equal(r.declared_implemented,1);assert.equal(r.controls[0].coverage,'detector_declared_not_validated')});

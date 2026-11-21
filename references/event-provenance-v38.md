@@ -1,0 +1,9 @@
+# v3.8 Transaction Event Provenance and CI Gate
+
+Each scenario produces an ordered event chain. The SHA-256 preimage binds `schema_version`, `case_id`, `engine`, `index`, `previous_hash`, and `event`. Event hashes are tamper-evident only after the full report is signed by a separate trusted runner; an unsigned chain alone is not an independent provenance guarantee.
+
+`coordinated_lock` is an opt-in scenario step requiring two active, independently identified sessions, a third observer, bounded repeated database-side lock samples, and explicit holder release. A pending client promise is not proof of database lock contention. Lock evidence is collected from PostgreSQL `pg_blocking_pids` or MySQL `performance_schema.data_lock_waits`. The step is **not** automatically added to all five example scenarios because some anomalies do not involve blocking locks; a fabricated lock probe would misrepresent them.
+
+The separate CI `attest-and-gate` job downloads completed execution artifacts, verifies all five event chains, and signs each full report using a protected CI environment secret. The gate requires a valid signature, all five case statuses `observed_pass_limited`, successful cleanup, and an aggregate exit code of zero. This establishes integrity of the submitted artifacts within the configured CI trust boundary; it does not establish database-server-origin cryptographic signatures, full process independence, or application-wide correctness.
+
+Real PostgreSQL/MySQL integration has to run before any real DB coverage can be claimed. No guarantee is made about which MySQL deadlock participant is selected as the victim, and PostgreSQL serialization failures may be surfaced during a statement or COMMIT. Scenarios without `coordinated_lock` do not acquire continuous lock samples merely because event chaining is enabled.

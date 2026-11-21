@@ -1,0 +1,12 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {executeSqlCorrectness} from '../lib/sql-correctness.mjs';
+const base={schema_version:'3.0',engine:'postgres',connection_env:'BGA_TEST_DB',test_database_acknowledged:true,cases:[{id:'null',kind:'null_semantics',control_ids:['BE-13-02'],sql:'SELECT NULL AS value',expected:{rows:[{value:null}]}}]};
+const env={BACKEND_GUARD_ALLOW_DB_TESTS:'yes',BGA_TEST_DB:'postgres://test'};
+const fake=(result)=>({postgres:{connect:async()=>({query:async sql=>sql.startsWith('SELECT')?{rows:result}:{rows:[]},close:async()=>{}})}});
+test('SQL harness passes explicit null result assertion',async()=>{const r=await executeSqlCorrectness(base,{drivers:fake([{value:null}]),env});assert.equal(r.assessment.status,'observed_pass_limited');assert.equal(r.cases[0].checks[0].pass,true)});
+test('SQL harness fails mismatched result',async()=>{const r=await executeSqlCorrectness(base,{drivers:fake([{value:0}]),env});assert.equal(r.assessment.exit_code,1)});
+test('SQL harness rejects mutating SQL',async()=>{await assert.rejects(()=>executeSqlCorrectness({...base,cases:[{...base.cases[0],sql:'DELETE FROM users'}]},{drivers:fake([]),env}),/Only SELECT/)});
+test('SQL harness requires explicit database opt-in',async()=>{await assert.rejects(()=>executeSqlCorrectness(base,{drivers:fake([]),env:{BGA_TEST_DB:'postgres://test'}}),/opt-in/)});
+test('SQL harness handles query execution error as insufficient evidence',async()=>{const drivers={postgres:{connect:async()=>({query:async sql=>{if(sql.startsWith('SELECT'))throw Object.assign(Error('failed'),{code:'DB_TEST_ERROR'});return {rows:[]}},close:async()=>{}})}};const r=await executeSqlCorrectness(base,{drivers,env});assert.equal(r.assessment.exit_code,2)});
+test('SQL harness plan assertions use observed JSON plan',async()=>{const m={...base,cases:[{id:'plan',kind:'query_plan',control_ids:['BE-11-02'],sql:'SELECT id FROM users',expected:{plan_contains:['Index Scan']}}]};const drivers={postgres:{connect:async()=>({query:async sql=>sql.startsWith('EXPLAIN')?{rows:[{'QUERY PLAN':[{'Plan':{'Node Type':'Index Scan'}}]}]}:{rows:[]},close:async()=>{}})}};const r=await executeSqlCorrectness(m,{drivers,env});assert.equal(r.assessment.exit_code,0)});

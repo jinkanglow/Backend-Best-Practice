@@ -1,0 +1,16 @@
+{
+  "name": "production",
+  "block_severities": [
+    "critical",
+    "high"
+  ],
+  "require_evidence": true,
+  "require_project_contract": true,
+  "require_runtime_evidence_for": [
+    "authorization",
+    "transactions",
+    "idempotency",
+    "recovery"
+  ],
+  "unknown_handling": "block_for_critical_paths"
+}

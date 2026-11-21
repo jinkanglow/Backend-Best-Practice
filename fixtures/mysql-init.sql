@@ -1,0 +1,1 @@
+CREATE TABLE IF NOT EXISTS guard_integration_mysql (id INTEGER PRIMARY KEY, value VARCHAR(100) NOT NULL);

@@ -1,0 +1,12 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import {detectApiValidation,detectSqlParameterization,runControlDetectors} from '../lib/control-detectors.mjs';
+const withFixture=(source,fn)=>{const root=fs.mkdtempSync(path.join(os.tmpdir(),'backend-v27-'));try{fs.writeFileSync(path.join(root,'sample.ts'),source);return fn(root)}finally{fs.rmSync(root,{recursive:true,force:true})}};
+test('direct body to configured side effect is candidate, not confirmed validation failure',()=>withFixture('function handler(req:any,db:any){db.save(req.body)}',root=>{const r=detectApiValidation(root,{api_validation:{enabled:true,sensitive_methods:['save']}});assert.equal(r.findings.length,1);assert.equal(r.findings[0].confidence,'candidate');assert.equal(r.status,'insufficient_evidence')}));
+test('non-direct body and unrelated method do not trigger direct-body detector',()=>withFixture('function handler(req:any,db:any){const value=validate(req.body);db.save(value);db.log(req.body)}',root=>{const r=detectApiValidation(root,{api_validation:{enabled:true,sensitive_methods:['save']}});assert.equal(r.findings.length,0);assert.equal(r.status,'insufficient_evidence')}));
+test('interpolated SQL candidate is flagged without exposing interpolated source',()=>withFixture('db.query(`SELECT * FROM users WHERE id = ${id}`)',root=>{const r=detectSqlParameterization(root,{sql_parameterization:{enabled:true}});assert.equal(r.findings.length,1);assert.equal(r.findings[0].confidence,'candidate');assert.equal(JSON.stringify(r).includes('SELECT *'),false)}));
+test('parameterized SQL is not flagged by interpolation rule',()=>withFixture('db.query("SELECT * FROM users WHERE id = $1",[id])',root=>{const r=detectSqlParameterization(root,{sql_parameterization:{enabled:true}});assert.equal(r.findings.length,0);assert.equal(r.status,'insufficient_evidence')}));
+test('disabled detectors report not configured and malformed methods rejected',()=>withFixture('db.query(`select ${x}`)',root=>{assert.equal(detectSqlParameterization(root,{}).status,'not_configured');assert.throws(()=>detectSqlParameterization(root,{sql_parameterization:{enabled:true,query_methods:['not valid']}}))}));

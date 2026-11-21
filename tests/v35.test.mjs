@@ -1,0 +1,12 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {executeAnomalyScenarios} from '../lib/anomaly-scenarios.mjs';
+const manifest=JSON.parse(readFileSync(new URL('../examples/anomaly-postgres-v35.json',import.meta.url)));
+const env={BACKEND_GUARD_ALLOW_DB_TESTS:'yes',BACKEND_GUARD_PG_URL:'fake'};
+test('v3.5 declares exactly five independent scenario kinds',()=>assert.deepEqual(manifest.cases.map(x=>x.kind),['lost_update','non_repeatable_read','phantom_read','serialization_failure','retry_recovery']));
+test('v3.5 refuses database execution without opt-in',async()=>await assert.rejects(executeAnomalyScenarios(manifest,{env:{}}),/opt-in/));
+test('v3.5 rejects unknown control IDs',async()=>{const m=structuredClone(manifest);m.cases[0].control_ids=['UNKNOWN'];await assert.rejects(executeAnomalyScenarios(m,{env}),/Control ID/)});
+test('v3.5 rejects unsafe SQL',async()=>{const m=structuredClone(manifest);m.cases[0].setup[0].sql='DROP TABLE x';await assert.rejects(executeAnomalyScenarios(m,{env}),/SQL/)});
+test('v3.5 rejects missing scenario',async()=>{const m=structuredClone(manifest);m.cases.pop();await assert.rejects(executeAnomalyScenarios(m,{env}),/five/)});
+test('v3.5 returns insufficient evidence on driver failure, without claiming pass',async()=>{const driver={connect:async()=>{throw Object.assign(Error('unavailable'),{code:'ECONNREFUSED'})}};const result=await executeAnomalyScenarios(manifest,{env,drivers:{postgres:driver}});assert.equal(result.assessment.exit_code,2);assert(result.cases.every(x=>x.status==='insufficient_evidence'))});

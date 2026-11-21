@@ -1,0 +1,11 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {chainEvents,verifyEventChain,verifyScenarioReport,attestReport,verifyAttestation} from '../lib/event-provenance-v38.mjs';
+import {executeAnomalyScenarios} from '../lib/anomaly-scenarios.mjs';
+import {readFileSync} from 'node:fs';
+const fixture=()=>({schema_version:'3.8',engine:'postgres',cases:Array.from({length:5},(_,i)=>({id:`case${i}`,status:'observed_pass_limited',cleanup_complete:true,events:chainEvents([{phase:'begin',session:'a'},{phase:'query',session:'b',rows:[{value:i}]}],{caseId:`case${i}`,engine:'postgres'})})),assessment:{status:'observed_pass_limited_scope',exit_code:0}});
+test('v3.8 ordered per-event chain verifies all five cases',()=>assert(verifyScenarioReport(fixture())));
+test('v3.8 mutation, removal and reordering break chain',()=>{const x=fixture();x.cases[0].events[1].event.rows[0].value=100;assert(!verifyScenarioReport(x));const y=fixture();y.cases[0].events.shift();assert(!verifyScenarioReport(y));const z=fixture();z.cases[0].events.reverse();assert(!verifyScenarioReport(z));});
+test('v3.8 independent HMAC verification detects report tampering and wrong run',()=>{const x=fixture(),key='s'.repeat(40),sig=attestReport(x,{key,runId:'run-11'});assert(verifyAttestation(x,sig,{key,runId:'run-11'}));assert(!verifyAttestation(x,sig,{key,runId:'run-12'}));x.cases[0].status='observed_fail';assert(!verifyAttestation(x,sig,{key,runId:'run-11'}));});
+test('v3.8 manifest schemas have five independent cases',()=>{for(const engine of ['postgres','mysql']){const m=JSON.parse(readFileSync(new URL(`../examples/anomaly-${engine}-v38.json`,import.meta.url)));assert.equal(m.schema_version,'3.8');assert.equal(m.cases.length,5);}});
+test('v3.8 event chain preserves existing top-level event fields',()=>{const e=chainEvents([{phase:'expected_error',action:'commit',code:'40001'}],{caseId:'x',engine:'postgres'});assert.equal(e[0].phase,'expected_error');assert(verifyEventChain(e,{caseId:'x',engine:'postgres'}));});
