@@ -19,5 +19,5 @@ test('unresolved external aliases do not silently pass domain boundary',()=>{
  assert.equal(detectDomainBoundary(report,contract).status,'insufficient_evidence');
 });
 test('control runner includes both controls with distinct results',()=>{
- assert.equal(runControlDetectors(base,{migration_review:{enabled:true}}).results.length,2);
+ assert.equal(runControlDetectors(base,{migration_review:{enabled:true}}).results.length,6);
 });

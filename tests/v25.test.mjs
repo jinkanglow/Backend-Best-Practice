@@ -25,6 +25,6 @@ test('BE-01-02 requires explicit contract; invalid contracts rejected',()=>{
 test('detector is registered, but coverage does not assert validation of control',()=>{
  const registry=JSON.parse(fs.readFileSync(new URL('../rules/detector-registry.json',import.meta.url)));
  const coverage=auditControlCoverage(catalog,registry.detectors);
- assert.equal(coverage.declared_implemented,2);assert.equal(coverage.controls.find(x=>x.id==='BE-01-02').coverage,'detector_declared_not_validated');
- assert.equal(runControlDetectors(report([]),config).results.length,2);
+ assert.equal(coverage.declared_implemented,8);assert.equal(coverage.controls.find(x=>x.id==='BE-01-02').coverage,'detector_declared_not_validated');
+ assert.equal(runControlDetectors(report([]),config).results.length,6);
 });

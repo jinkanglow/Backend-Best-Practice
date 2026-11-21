@@ -68,6 +68,77 @@
       "tests": [
         "tests/v27.test.mjs"
       ]
+    },
+    {
+      "id": "be-14-04-error-handling-v1",
+      "control_ids": ["BE-14-04"],
+      "status": "implemented",
+      "entrypoint": "lib/control-detectors.mjs#detectErrorHandling",
+      "scope": "CODE-001 empty-catch findings; candidate only — does not prove error handling discipline",
+      "limitations": [
+        "Requires analyzer report with findings",
+        "Clean scan does not prove error context is always preserved"
+      ],
+      "tests": ["tests/v41.test.mjs"]
+    },
+    {
+      "id": "be-08-01-network-timeout-v1",
+      "control_ids": ["BE-08-01"],
+      "status": "implemented",
+      "entrypoint": "lib/control-detectors.mjs#detectNetworkTimeouts",
+      "scope": "REL-001 fetch-without-signal findings; candidate only — does not cover DB, gRPC or HTTP client libraries",
+      "limitations": [
+        "Requires analyzer report with findings",
+        "fetch() only; other network primitives not checked"
+      ],
+      "tests": ["tests/v41.test.mjs"]
+    },
+    {
+      "id": "be-09-03-hardcoded-credential-v1",
+      "control_ids": ["BE-09-03"],
+      "status": "implemented",
+      "entrypoint": "lib/control-detectors.mjs#detectHardcodedCredentials",
+      "scope": "SEC-001 literal-credential heuristic findings; candidate only",
+      "limitations": [
+        "Requires analyzer report with findings",
+        "Clean scan does not validate secret manager integration"
+      ],
+      "tests": ["tests/v41.test.mjs"]
+    },
+    {
+      "id": "be-15-02-secret-in-repo-v1",
+      "control_ids": ["BE-15-02"],
+      "status": "implemented",
+      "entrypoint": "lib/control-detectors.mjs#detectSecretInRepo",
+      "scope": "SEC-001 literal-credential heuristic findings; candidate only — does not scan git history",
+      "limitations": [
+        "Requires analyzer report with findings",
+        "Does not scan .env files, generated output or git history"
+      ],
+      "tests": ["tests/v41.test.mjs"]
+    },
+    {
+      "id": "be-15-03-dependency-pinning-v1",
+      "control_ids": ["BE-15-03"],
+      "status": "implemented",
+      "entrypoint": "lib/control-detectors.mjs#detectDependencyPinning",
+      "scope": "package.json semver range check; candidate only — npm/Node.js projects only",
+      "limitations": [
+        "Does not verify lockfile integrity or transitive dependency pinning",
+        "Only checks package.json direct dependencies"
+      ],
+      "tests": ["tests/v41.test.mjs"]
+    },
+    {
+      "id": "be-15-05-lockfile-presence-v1",
+      "control_ids": ["BE-15-05"],
+      "status": "implemented",
+      "entrypoint": "lib/control-detectors.mjs#detectLockfilePresence",
+      "scope": "Lockfile file presence check; does not validate lockfile content or SBOM format",
+      "limitations": [
+        "File presence only — does not verify lockfile authenticity or completeness"
+      ],
+      "tests": ["tests/v41.test.mjs"]
     }
   ]
 }
